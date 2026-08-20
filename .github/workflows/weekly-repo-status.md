@@ -6,9 +6,6 @@ description: |
   and project recommendations.
 
 on:
-  # 12:00 UTC every Sunday. Fixed cron (not the "weekly" fuzzy shorthand)
-  # because that scatters the run time to spread load.
-  schedule: "0 12 * * 0"
   workflow_dispatch:
 
 permissions:

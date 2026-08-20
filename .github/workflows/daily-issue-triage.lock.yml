@@ -52,9 +52,6 @@
 
 name: "Daily Issue Triage"
 on:
-  schedule:
-  - cron: "26 13 * * 1-5"
-    # Friendly format: daily around 14:00 on weekdays (scattered)
   workflow_dispatch:
     inputs:
       aw_context:

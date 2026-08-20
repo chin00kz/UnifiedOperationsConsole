@@ -7,7 +7,6 @@ description: |
 name: Daily Issue Triage
 
 on:
-  schedule: daily around 14:00 on weekdays
   workflow_dispatch:
 
 permissions: read-all
