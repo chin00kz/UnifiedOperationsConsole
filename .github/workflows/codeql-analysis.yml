@@ -18,8 +18,6 @@
 name: CodeQL Analysis
 on:
   workflow_dispatch:
-  workflow_dispatch:
-    branches: [main]
 permissions:
   actions: read
   contents: read
