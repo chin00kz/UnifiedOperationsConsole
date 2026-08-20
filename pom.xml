@@ -171,7 +171,7 @@
         <cs.json.version>20231013</cs.json.version>
         <cs.jstl.version>1.2</cs.jstl.version>
         <cs.kafka-clients.version>2.7.0</cs.kafka-clients.version>
-        <cs.libvirt-java.version>0.5.3</cs.libvirt-java.version>
+        <cs.libvirt-java.version>0.5.4</cs.libvirt-java.version>
         <cs.mail.version>1.5.0-b01</cs.mail.version>
         <cs.mustache.version>0.9.14</cs.mustache.version>
         <cs.mysql.version>8.4.0</cs.mysql.version>
