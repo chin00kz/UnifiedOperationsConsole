@@ -1,0 +1,158 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+package org.apache.cloudstack.api.command.user.backup;
+
+import javax.inject.Inject;
+
+import org.apache.cloudstack.acl.RoleType;
+import org.apache.cloudstack.api.ACL;
+import org.apache.cloudstack.api.APICommand;
+import org.apache.cloudstack.api.ApiCommandResourceType;
+import org.apache.cloudstack.api.ApiConstants;
+import org.apache.cloudstack.api.ApiErrorCode;
+import org.apache.cloudstack.api.BaseAsyncCmd;
+import org.apache.cloudstack.api.Parameter;
+import org.apache.cloudstack.api.ServerApiException;
+import org.apache.cloudstack.api.response.HostResponse;
+import org.apache.cloudstack.api.response.SuccessResponse;
+import org.apache.cloudstack.api.response.UserVmResponse;
+import org.apache.cloudstack.api.response.BackupResponse;
+import org.apache.cloudstack.backup.BackupManager;
+import org.apache.cloudstack.context.CallContext;
+
+import com.cloud.event.EventTypes;
+import com.cloud.exception.ConcurrentOperationException;
+import com.cloud.exception.InsufficientCapacityException;
+import com.cloud.exception.NetworkRuleConflictException;
+import com.cloud.exception.ResourceAllocationException;
+import com.cloud.exception.ResourceUnavailableException;
+import com.cloud.utils.exception.CloudRuntimeException;
+
+@APICommand(name = "restoreVolumeFromBackupAndAttachToVM",
+        description = "Restore and attach a backed up volume to Instance",
+        responseObject = SuccessResponse.class, since = "4.14.0",
+        authorized = {RoleType.Admin, RoleType.ResourceAdmin, RoleType.DomainAdmin, RoleType.User})
+public class RestoreVolumeFromBackupAndAttachToVMCmd extends BaseAsyncCmd {
+
+    @Inject
+    private BackupManager backupManager;
+
+    /////////////////////////////////////////////////////
+    //////////////// API parameters /////////////////////
+    /////////////////////////////////////////////////////
+
+    @ACL
+    @Parameter(name = ApiConstants.BACKUP_ID,
+            type = CommandType.UUID,
+            entityType = BackupResponse.class,
+            required = true,
+            description = "ID of the Instance backup")
+    private Long backupId;
+
+    @ACL
+    @Parameter(name = ApiConstants.VOLUME_ID,
+            type = CommandType.STRING,
+            required = true,
+            description = "ID of the volume backed up")
+    private String volumeUuid;
+
+    @ACL
+    @Parameter(name = ApiConstants.VIRTUAL_MACHINE_ID,
+            type = CommandType.UUID,
+            entityType = UserVmResponse.class,
+            required = true,
+            description = "ID of the Instance where to attach the restored volume")
+    private Long vmId;
+
+    @Parameter(name = ApiConstants.QUICK_RESTORE, type = CommandType.BOOLEAN, description = "Whether to use the quick restore process or not. " +
+            "Currently this parameter is only supported by the KBOSS provider.", since = "4.23.0")
+    private Boolean quickRestore;
+
+    @Parameter(name = ApiConstants.HOST_ID, type = CommandType.UUID, entityType = HostResponse.class, description = "If quickrestore is true, which host to start the VM on;" +
+            " otherwise, ignored. Currently this parameter is only supported by the KBOSS provider.", since = "4.23.0", authorized = {RoleType.Admin})
+    private Long hostId;
+
+    /////////////////////////////////////////////////////
+    /////////////////// Accessors ///////////////////////
+    /////////////////////////////////////////////////////
+
+    public String getVolumeUuid() {
+        return volumeUuid;
+    }
+
+    public Long getVmId() {
+        return vmId;
+    }
+
+    public Long getBackupId() {
+        return backupId;
+    }
+
+    public boolean isQuickRestore() {
+        return org.apache.commons.lang3.BooleanUtils.isTrue(quickRestore);
+    }
+
+    public Long getHostId() {
+        return hostId;
+    }
+
+    @Override
+    public long getEntityOwnerId() {
+        return CallContext.current().getCallingAccount().getId();
+    }
+
+    /////////////////////////////////////////////////////
+    /////////////// API Implementation///////////////////
+    /////////////////////////////////////////////////////
+
+    @Override
+    public void execute() throws ResourceUnavailableException, InsufficientCapacityException, ServerApiException, ConcurrentOperationException, ResourceAllocationException, NetworkRuleConflictException {
+        try {
+            boolean result = backupManager.restoreBackupVolumeAndAttachToVM(volumeUuid, backupId, vmId, isQuickRestore(), getHostId());
+            if (result) {
+                SuccessResponse response = new SuccessResponse(getCommandName());
+                response.setResponseName(getCommandName());
+                setResponseObject(response);
+            } else {
+                throw new CloudRuntimeException("Error restoring volume and attaching to Instance");
+            }
+        } catch (Exception e) {
+            throw new ServerApiException(ApiErrorCode.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public String getEventType() {
+        return EventTypes.EVENT_VM_BACKUP_RESTORE_VOLUME_TO_VM;
+    }
+
+    @Override
+    public String getEventDescription() {
+        return "Restoring volume "+ volumeUuid + " from backup " + getResourceUuid(ApiConstants.BACKUP_ID) + " and attaching it to Instance " + getResourceUuid(ApiConstants.VIRTUAL_MACHINE_ID);
+    }
+
+    @Override
+    public Long getApiResourceId() {
+        return vmId;
+    }
+
+    @Override
+    public ApiCommandResourceType getApiResourceType() {
+        return ApiCommandResourceType.VirtualMachine;
+    }
+}

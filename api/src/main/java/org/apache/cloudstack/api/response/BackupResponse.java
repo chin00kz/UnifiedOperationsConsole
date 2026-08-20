@@ -1,0 +1,389 @@
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+package org.apache.cloudstack.api.response;
+
+import org.apache.cloudstack.api.ApiConstants;
+import org.apache.cloudstack.api.BaseResponse;
+import org.apache.cloudstack.api.EntityReference;
+import org.apache.cloudstack.backup.Backup;
+
+import com.cloud.serializer.Param;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
+import java.util.Map;
+
+@EntityReference(value = Backup.class)
+public class BackupResponse extends BaseResponse {
+
+    @SerializedName(ApiConstants.ID)
+    @Param(description = "ID of the Instance backup")
+    private String id;
+
+    @SerializedName(ApiConstants.NAME)
+    @Param(description = "name of the backup", since = "4.21.0")
+    private String name;
+
+    @SerializedName(ApiConstants.DESCRIPTION)
+    @Param(description = "description for the backup", since = "4.21.0")
+    private String description;
+
+    @SerializedName(ApiConstants.VIRTUAL_MACHINE_ID)
+    @Param(description = "ID of the Instance")
+    private String vmId;
+
+    @SerializedName(ApiConstants.VIRTUAL_MACHINE_NAME)
+    @Param(description = "Name of the Instance")
+    private String vmName;
+
+    @SerializedName(ApiConstants.EXTERNAL_ID)
+    @Param(description = "External backup id")
+    private String externalId;
+
+    @SerializedName(ApiConstants.TYPE)
+    @Param(description = "Backup type")
+    private String type;
+
+    @SerializedName(ApiConstants.CREATED)
+    @Param(description = "Backup date")
+    private Date date;
+
+    @SerializedName(ApiConstants.SIZE)
+    @Param(description = "Backup size in bytes")
+    private Long size;
+
+    @SerializedName(ApiConstants.VIRTUAL_SIZE)
+    @Param(description = "Backup protected (virtual) size in bytes")
+    private Long protectedSize;
+
+    @SerializedName(ApiConstants.UNCOMPRESSED_SIZE)
+    @Param(description = "Backup uncompressed size in bytes. Only defined if backup is compressed.")
+    private Long uncompressedSize;
+
+    @SerializedName(ApiConstants.STATUS)
+    @Param(description = "Backup status")
+    private Backup.Status status;
+
+    @SerializedName(ApiConstants.COMPRESSION_STATUS)
+    @Param(description = "Backup compression status.")
+    private Backup.CompressionStatus compressionStatus;
+
+    @SerializedName(ApiConstants.VALIDATION_STATUS)
+    @Param(description = "Backup validation status.")
+    private Backup.ValidationStatus validationStatus;
+
+    @SerializedName(ApiConstants.VOLUMES)
+    @Param(description = "Backed up volumes")
+    private String volumes;
+
+    @SerializedName(ApiConstants.BACKUP_OFFERING_ID)
+    @Param(description = "Backup offering id")
+    private String backupOfferingId;
+
+    @SerializedName(ApiConstants.BACKUP_OFFERING_NAME)
+    @Param(description = "Backup offering name")
+    private String backupOfferingName;
+
+    @SerializedName(ApiConstants.ACCOUNT_ID)
+    @Param(description = "Account id")
+    private String accountId;
+
+    @SerializedName(ApiConstants.ACCOUNT)
+    @Param(description = "Account name")
+    private String account;
+
+    @SerializedName(ApiConstants.DOMAIN_ID)
+    @Param(description = "Domain ID")
+    private String domainId;
+
+    @SerializedName(ApiConstants.DOMAIN)
+    @Param(description = "Domain name")
+    private String domain;
+
+    @SerializedName(ApiConstants.ZONE_ID)
+    @Param(description = "Zone ID")
+    private String zoneId;
+
+    @SerializedName(ApiConstants.ZONE)
+    @Param(description = "Zone name")
+    private String zone;
+
+    @SerializedName(ApiConstants.VM_DETAILS)
+    @Param(description = "Lists the vm specific details for the backup", since = "4.21.0")
+    private Map<String, String> vmDetails;
+
+    @SerializedName(ApiConstants.INTERVAL_TYPE)
+    @Param(description = "Interval type of the backup", since = "4.21.0")
+    private String intervalType;
+
+    @SerializedName(ApiConstants.BACKUP_VM_OFFERING_REMOVED)
+    @Param(description = "The backup offering corresponding to this backup was removed from the VM", since = "4.21.0")
+    private Boolean vmOfferingRemoved;
+
+    @SerializedName(ApiConstants.IS_BACKUP_VM_EXPUNGED)
+    @Param(description = "Indicates whether the VM from which the backup was taken is expunged or not", since = "4.22.0")
+    private Boolean isVmExpunged;
+
+    @SerializedName(ApiConstants.FROM_CHECKPOINT_ID)
+    @Param(description = "Previous active checkpoint ID for incremental backups", since = "4.23.0")
+    private String fromCheckpointId;
+
+    @SerializedName(ApiConstants.TO_CHECKPOINT_ID)
+    @Param(description = "Next checkpoint ID for incremental backups", since = "4.23.0")
+    private String toCheckpointId;
+
+    @SerializedName(ApiConstants.HOST_ID)
+    @Param(description = "Host ID where the backup is running", since = "4.23.0")
+    private String hostId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getVmId() {
+        return vmId;
+    }
+
+    public void setVmId(String vmId) {
+        this.vmId = vmId;
+    }
+
+    public String getVmName() {
+        return vmName;
+    }
+
+    public void setVmName(String vmName) {
+        this.vmName = vmName;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getDate() {
+        return this.date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Long getProtectedSize() {
+        return protectedSize;
+    }
+
+    public void setProtectedSize(Long protectedSize) {
+        this.protectedSize = protectedSize;
+    }
+
+    public Long getUncompressedSize() {
+        return uncompressedSize;
+    }
+
+    public void setUncompressedSize(Long uncompressedSize) {
+        this.uncompressedSize = uncompressedSize;
+    }
+
+    public Backup.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Backup.Status status) {
+        this.status = status;
+    }
+
+    public Backup.CompressionStatus getCompressionStatus() {
+        return compressionStatus;
+    }
+
+    public void setCompressionStatus(Backup.CompressionStatus compressionStatus) {
+        this.compressionStatus = compressionStatus;
+    }
+
+    public Backup.ValidationStatus getValidationStatus() {
+        return validationStatus;
+    }
+
+    public void setValidationStatus(Backup.ValidationStatus validationStatus) {
+        this.validationStatus = validationStatus;
+    }
+
+    public String getVolumes() {
+        return volumes;
+    }
+
+    public void setVolumes(String volumes) {
+        this.volumes = volumes;
+    }
+
+    public String getBackupOfferingId() {
+        return backupOfferingId;
+    }
+
+    public void setBackupOfferingId(String backupOfferingId) {
+        this.backupOfferingId = backupOfferingId;
+    }
+
+    public String getBackupOffering() {
+        return backupOfferingName;
+    }
+
+    public void setBackupOffering(String backupOfferingName) {
+        this.backupOfferingName = backupOfferingName;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getZoneId() {
+        return zoneId;
+    }
+
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
+
+    public Map<String, String> getVmDetails() {
+        return vmDetails;
+    }
+
+    public void setVmDetails(Map<String, String> vmDetails) {
+        this.vmDetails = vmDetails;
+    }
+
+    public String getIntervalType() {
+        return this.intervalType;
+    }
+
+    public void setIntervalType(String intervalType) {
+        this.intervalType = intervalType;
+    }
+
+    public Boolean getVmOfferingRemoved() {
+        return this.vmOfferingRemoved;
+    }
+
+    public void setVmOfferingRemoved(Boolean vmOfferingRemoved) {
+        this.vmOfferingRemoved = vmOfferingRemoved;
+    }
+
+    public void setVmExpunged(Boolean isVmExpunged) {
+        this.isVmExpunged = isVmExpunged;
+    }
+
+    public void setFromCheckpointId(String fromCheckpointId) {
+        this.fromCheckpointId = fromCheckpointId;
+    }
+
+    public String getFromCheckpointId() {
+        return this.fromCheckpointId;
+    }
+
+    public void setToCheckpointId(String toCheckpointId) {
+        this.toCheckpointId = toCheckpointId;
+    }
+
+    public String getToCheckpointId() {
+        return this.toCheckpointId;
+    }
+
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
+
+    public String getHostId() {
+        return this.hostId;
+    }
+}
